@@ -21,25 +21,28 @@ def print_parameters(clf):
 #############################
 # LOADING CRC
 #############################
-f = open("data/features_tissues.txt","r")
+f = open("data_bvlc/crc_features.txt","r")
 #
 X = list()
 Y = list()
+t = 0
 for i in f:
 	linha = i[:-1].split(";")
+        print(linha[0][0:2])
 	c = int(linha[0][0:2])
+        t += 1
         if(c >= 1 and c<=8):
             x_tmp = list()
-            for j in linha[2:]:
+            for j in linha[2:-1]:
                 x_tmp.append(float(j))
-            if(len(x_tmp) != 2048):
+            if(len(x_tmp) != 4096):
                 continue
             X.append(x_tmp)
             #
             # 0 - importante
             # 1 - irrelevante
             #
-            if(c > 4):
+            if(c > 2):
                 Y.append(1)
             else:
                 Y.append(0)
@@ -62,7 +65,7 @@ if( os.path.exists("classificador_crc.pkl") == True ):
 else:
     #
     #clf = GridSearchCV(SVC(probability=True), tuned_parameters, cv=5, scoring='accuracy', n_jobs=2, verbose=5)
-    clf = RandomForestClassifier(n_estimators=50, n_jobs=2)
+    clf = RandomForestClassifier(n_estimators=200, n_jobs=2)
     clf.fit(X_train, Y_train)
     #
     #print_parameters(clf)
@@ -70,6 +73,7 @@ else:
     #clf = SVC(probability=True)
     #clf.fit(X_train, Y_train)
     joblib.dump(clf, "classificador_crc.pkl")
+exit(0)
 #
 #print_parameters(clf)
 print(clf.score(X_test, Y_test))
@@ -89,17 +93,18 @@ Y = list()
 Z = list()
 p = 0
 for i in f:
-    if(p == 0):
-        p = 1
-        continue
+    #if(p == 0):
+    #    p = 1
+    #    continue
     linha = i[:-1].split(";")
     x_tmp = list()
-    for j in linha[1:]:
+    for j in linha[2:-1]:
         x_tmp.append(float(j))
     if(len(x_tmp) != 2048):
+        print("erro")
         continue
     X.append(x_tmp)
-    class_str = linha[0].split("/")[8]
+    class_str = linha[0] #linha[0].split("/")[8]
     #
     # 0 - importante
     # 1 - irrelevante
@@ -122,7 +127,7 @@ for i in f:
 	class_line = int(3)
     #
     Y.append(class_str)
-    Z.append(linha[0].split("/")[9])
+    Z.append(linha[1])
 #
 f.close()
 #

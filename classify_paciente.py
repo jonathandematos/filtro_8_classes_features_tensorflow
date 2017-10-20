@@ -163,7 +163,7 @@ tuned_parameters = [{'kernel': ['rbf'], 'gamma': [1, 1e-1, 5e-1],
 #clf = GridSearchCV(SVC(probability=True), tuned_parameters, cv=5, scoring='accuracy', n_jobs=2)
 #clf = SVC(probability=True)
 #clf = DecisionTreeClassifier()
-clf = RandomForestClassifier(n_estimators=100)
+clf = RandomForestClassifier(n_estimators=200)
 #X_train, X_test, Y_train, Y_test = train_test_split(X,Y, test_size=0.30)
 clf.fit(X_train, Y_train)
 #
@@ -172,18 +172,18 @@ clf.fit(X_train, Y_train)
 #
 #exit(0)
 #
-pacs = {}
-imgs = {}
-patch = {}
+#pacs = {}
+#imgs = {}
+#patch = {}
 #
 # SOB_B_A-14-22549G-100-030-550-150.png
 #
 correto = 0
 total = 0
 for i in range(len(X_test)):
-    str_img = U_test[i].split("-")
-    img = str(str_img[2])+str(str_img[3])+str(str_img[4])
-    pac = str(str_img[0])+str(str_img[2])
+#    str_img = U_test[i].split("-")
+#    img = str(str_img[2])+str(str_img[3])+str(str_img[4])
+#    pac = str(str_img[0])+str(str_img[2])
     pred = np.squeeze(clf.predict_proba(np.array([X_test[i]])))
     print("{};{};".format(U_test[i], Y_test[i]), end="")
     for j in pred:
