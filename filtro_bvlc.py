@@ -46,12 +46,12 @@ for i in f:
                 Y.append(1)
             else:
                 Y.append(0)
-
+#
 f.close()
 #############################
 # TRAINING SVM
 #############################
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3)
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.30)
 #
 del X
 del Y
@@ -64,8 +64,8 @@ if( os.path.exists("classificador_crc.pkl") == True ):
     clf = joblib.load("classificador_crc.pkl")
 else:
     #
-    clf = GridSearchCV(SVC(probability=True), tuned_parameters, cv=5, scoring='accuracy', n_jobs=2, verbose=5)
-    #clf = RandomForestClassifier(n_estimators=200, n_jobs=2)
+    #clf = GridSearchCV(SVC(probability=True), tuned_parameters, cv=5, scoring='accuracy', n_jobs=2, verbose=5)
+    clf = RandomForestClassifier(n_estimators=200, n_jobs=2)
     clf.fit(X_train, Y_train)
     #
     #print_parameters(clf)
@@ -76,7 +76,6 @@ else:
 #
 #print_parameters(clf)
 print(clf.score(X_test, Y_test))
-#
 del X_train
 del X_test
 del Y_train
@@ -98,38 +97,41 @@ for i in f:
     #    continue
     linha = i[:-1].split(";")
     x_tmp = list()
-    for j in linha[2:-1]:
+    for j in linha[1:-1]:
         x_tmp.append(float(j))
-    if(len(x_tmp) != 2048):
+    if(len(x_tmp) != 4096):
         print("erro")
         continue
     X.append(x_tmp)
-    class_str = linha[0] #linha[0].split("/")[8]
+    #class_str = linha[0] #linha[0].split("/")[8]
+    class_str = linha[0].split("-")[0].split("_")[2]
     #
     # 0 - importante
     # 1 - irrelevante
     #
-    if(class_str == 'adenosis'):
+    if(class_str == 'A'):
     	class_line = int(0)
-    if(class_str == 'ductal_carcinoma'):
+    if(class_str == 'DC'):
     	class_line = int(4)
-    if(class_str == 'fibroadenoma'):
+    if(class_str == 'F'):
     	class_line = int(1)
-    if(class_str == 'lobular_carcinoma'):
+    if(class_str == 'LC'):
     	class_line = int(5)
-    if(class_str == 'mucinous_carcinoma'):
+    if(class_str == 'MC'):
     	class_line = int(6)
-    if(class_str == 'papillary_carcinoma'):
+    if(class_str == 'PC'):
     	class_line = int(7)
-    if(class_str == 'phyllodes_tumor'):
+    if(class_str == 'PT'):
     	class_line = int(2)
-    if(class_str == 'tubular_adenoma'):
+    if(class_str == 'TA'):
 	class_line = int(3)
     #
     Y.append(class_str)
-    Z.append(linha[1])
+    Z.append(linha[0])
 #
 f.close()
+#for i in Y:
+#    print(i)
 #
 f = open(sys.argv[2],"w")
 for i in range(len(X)):
